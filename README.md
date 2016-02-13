@@ -17,3 +17,13 @@ I will first make a plan of attack to allow the class to be built in stages.
   * This will extend the matrix for 3 DOF
 5. EKF : Implement the Extended Kalman Filter for small non-linearity  
 6. UKF : Implement the Unscented Kalman Filter for a better non-linear approximation
+
+
+
+
+
+## Notes:
+
+This project will need to have the following included:
+
+Eigen3 from : https://bitbucket.org/eigen/eigen/
