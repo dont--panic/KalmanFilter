@@ -8,94 +8,94 @@
 
 #include "KalmanFilter.h"
 
-KalmanFilter::KalmanFilter(double ICState, double ICErrorInEstimate, double ICErrorInMeasurement)
+KalmanFilter::KalmanFilter(double par_initial_concition_state, double par_initial_concition_error_in_estimate, double par_initial_concition_error_in_measurement)
 {
-	_state = ICState;
-	_errorInEstimate = ICErrorInEstimate;
-	_errorInMeasurement = ICErrorInMeasurement;
+	_state = par_initial_concition_state;
+	_error_in_estimate = par_initial_concition_error_in_estimate;
+	_error_in_measurement = par_initial_concition_error_in_measurement;
 }
 
 KalmanFilter::~KalmanFilter(){}
 
 
-void KalmanFilter::iterate()
+void KalmanFilter::Iterate()
 {
-	calculateKalmanGain();
-	calculateEstimate();
-	calculeErrorInEstimate();
+	CalculateKalmanGain();
+	CalculateEstimate();
+	CalculeErrorInEstimate();
 
 }
 
 
-double KalmanFilter::calculateKalmanGain()
+double KalmanFilter::CalculateKalmanGain()
 {
-	_KG = _errorInEstimate / (_errorInEstimate + _errorInMeasurement) ;
-	return _KG;
+	_kalman_gain = _error_in_estimate / (_error_in_estimate + _error_in_measurement) ;
+	return _kalman_gain;
 }
 
-double KalmanFilter::calculateEstimate()
+double KalmanFilter::CalculateEstimate()
 {
-	_estimateMin1 = _estimate;
+	_estimate_minus_1 = _estimate;
 
-	_estimate = _estimateMin1 + _KG * ( _state - _estimateMin1);
+	_estimate = _estimate_minus_1 + _kalman_gain * ( _state - _estimate_minus_1);
 	return _estimate;
 }
 
-double KalmanFilter::calculeErrorInEstimate()
+double KalmanFilter::CalculeErrorInEstimate()
 {
-	_errorInEstimateMin1 = _errorInEstimate;
+	_error_in_estimate_minus_1 = _error_in_estimate;
 
-	_errorInEstimate = (1- _KG)*_errorInEstimateMin1;
+	_error_in_estimate = (1- _kalman_gain)*_error_in_estimate_minus_1;
 
-	return _errorInEstimate;
+	return _error_in_estimate;
 }
 
 
 
-void KalmanFilter::publishState()
+void KalmanFilter::PublishState()
 {
-	publishState(NAN);
+	PublishState(NAN);
 }
 
-void KalmanFilter::publishState(double actualState)
+void KalmanFilter::PublishState(double par_actual_state)
 {
 	std::ostringstream outstring;
 
-	outstring << "State: " << _state << " Error In Estimate: " << _errorInEstimate;
+	outstring << "State Estimate: " << _estimate << " Error In Estimate: " << _error_in_estimate << " Kalman Gain: " << _kalman_gain;
 
-	if(actualState != NAN)
+	if(par_actual_state != NAN)
 	{
-		outstring << " Actual State: " << actualState ;
+		outstring << " Actual State: " << par_actual_state ;
 	}
 
 	std::cout << outstring.str() << std::endl;
 }
 
-double KalmanFilter::getState()
+double KalmanFilter::GetState()
 {
 	return _state;
 }
 
-double KalmanFilter::getCovariance()
+double KalmanFilter::GetCovariance()
 {
-	return _errorInEstimate;
+	return _error_in_estimate;
 }
 
 
-void KalmanFilter::log()
+void KalmanFilter::Log()
 {
-	log(NAN);
+	Log(NAN);
 }
 
-void KalmanFilter::log(double actualState)
+void KalmanFilter::Log(double par_actual_state)
 {
 	std::ofstream stateLog;
 	stateLog.open("KalmanFilterLog.csv", std::ios_base::app);
-	stateLog << _state << "," << _errorInEstimate ;
+	stateLog << "State Estimate, " << _estimate << ",Error In Estimate, " << _error_in_estimate << ",Kalman Gain, " << _kalman_gain;
 
-	if(actualState != NAN)
+	if(par_actual_state != NAN)
 	{
-		stateLog << "," << actualState ;
+		stateLog << ",Actual State," << par_actual_state ;
 	}
 
 	stateLog << "\n";
@@ -104,22 +104,20 @@ void KalmanFilter::log(double actualState)
 
 }
 
-void KalmanFilter::takeMeasurement(double InState)
+void KalmanFilter::TakeMeasurement(double par_in_state)
 {
-	takeMeasurement(InState, NAN);
+	TakeMeasurement(par_in_state, NAN);
 }
 
 
-void KalmanFilter::takeMeasurement(double InState, double ErrorInMeasurement)
+void KalmanFilter::TakeMeasurement(double par_in_state, double ErrorInMeasurement)
 {
-	_stateMin1 = _state;
-
-	_state = InState;
+	_state = par_in_state;
 
 
 	if(ErrorInMeasurement != NAN)
 	{
-		_errorInMeasurement = ErrorInMeasurement;
+		_error_in_measurement = ErrorInMeasurement;
 	}
 
 }

@@ -23,15 +23,15 @@ public:
 	KalmanFilter(double ICState, double ICErrorInEstimate, double ICErrorInMeasurement);
 	virtual ~KalmanFilter();
 
-	void iterate();
-	void publishState();
-	void publishState(double actualState);
-	double getState();
-	double getCovariance();
-	void log();
-	void log(double actualState);
-	void takeMeasurement(double InState);
-	void takeMeasurement(double InState, double ErrorInMeasurement);
+	void Iterate();
+	void PublishState();
+	void PublishState(double actualState);
+	double GetState();
+	double GetCovariance();
+	void Log();
+	void Log(double actualState);
+	void TakeMeasurement(double InState);
+	void TakeMeasurement(double InState, double ErrorInMeasurement);
 
 private:
 
@@ -43,24 +43,20 @@ private:
 	double _gamma = 0;
 
 	double _measurement = 0;
-	double _errorInMeasurement = 0;
-	double _errorInMeasurementMin1 = 0;
-	double _errorInEstimate = 0;
-	double _errorInEstimateMin1 =0;
+	double _error_in_measurement = 0;
+	double _error_in_estimate = 0;
+	double _error_in_estimate_minus_1 =0;
 
-	double _KG = 0;
+	double _kalman_gain = 0;
 	double _estimate = 0;
-	double _estimateMin1 = 0;
+	double _estimate_minus_1 = 0;
 
 	double _state = 0;
-	double _stateMin1 = 0;
-
-	double _actualState = 0;
 
 
-	double calculateKalmanGain();
-	double calculateEstimate();
-	double calculeErrorInEstimate();
+	double CalculateKalmanGain();
+	double CalculateEstimate();
+	double CalculeErrorInEstimate();
 
 };
 

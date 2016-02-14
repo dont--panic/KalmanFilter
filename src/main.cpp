@@ -14,31 +14,31 @@
 
 int main(int argc, char** argv)
 {
-	double ICtemp = 35 ;
-	double ICErrorInEstimate = 2;
-	double errorInMeasurement = 4;
-	double actualTemp = 50;
+	double ititial_condition_temp = 35 ;
+	double initial_condition_error_in_estimate = 2;
+	double error_in_measurement = 1;
+	double actual_temp = 50;
 
 
 
-	KalmanFilter testKF(ICtemp, ICErrorInEstimate, errorInMeasurement);
+	KalmanFilter testKF(ititial_condition_temp, initial_condition_error_in_estimate, error_in_measurement);
 
 
-	testKF.publishState(actualTemp);
+	testKF.PublishState(actual_temp);
 
 	for (int i = 0; i < 20; ++i)
 	{
-		actualTemp = 50 + 2*exp(-i);
+		actual_temp = 50;
 
-		double r = ((double) rand() / (RAND_MAX)) - (errorInMeasurement/2);
+		double r = ((double) rand() / (RAND_MAX)) - (error_in_measurement/2);
 
-		testKF.takeMeasurement(actualTemp+r, errorInMeasurement);
+		testKF.TakeMeasurement(actual_temp+r, error_in_measurement);
 
-		testKF.publishState(actualTemp);
+		testKF.PublishState(actual_temp);
 
-		testKF.iterate();
+		testKF.Iterate();
 	}
-	testKF.publishState(actualTemp);
+	testKF.PublishState(actual_temp);
 
 
 	return 0;
