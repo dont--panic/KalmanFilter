@@ -26,7 +26,7 @@ public:
 	void Iterate();
 	void PublishState();
 	void PublishState(double actualState);
-	double GetState();
+	double GetStateEstimate();
 	double GetCovariance();
 	void Log();
 	void Log(double actualState);

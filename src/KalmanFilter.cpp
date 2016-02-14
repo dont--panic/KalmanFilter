@@ -17,22 +17,22 @@ KalmanFilter::KalmanFilter(double par_initial_concition_state, double par_initia
 
 KalmanFilter::~KalmanFilter(){}
 
-
+// this calculates the Kalman Filter based on current inputs
 void KalmanFilter::Iterate()
 {
 	CalculateKalmanGain();
 	CalculateEstimate();
 	CalculeErrorInEstimate();
-
 }
 
-
+// this calculates the Kalman Gain
 double KalmanFilter::CalculateKalmanGain()
 {
 	_kalman_gain = _error_in_estimate / (_error_in_estimate + _error_in_measurement) ;
 	return _kalman_gain;
 }
 
+// this calculates the estimated location
 double KalmanFilter::CalculateEstimate()
 {
 	_estimate_minus_1 = _estimate;
@@ -41,6 +41,7 @@ double KalmanFilter::CalculateEstimate()
 	return _estimate;
 }
 
+// this calculates the error in the estimate
 double KalmanFilter::CalculeErrorInEstimate()
 {
 	_error_in_estimate_minus_1 = _error_in_estimate;
@@ -51,12 +52,13 @@ double KalmanFilter::CalculeErrorInEstimate()
 }
 
 
-
+// this is calls the regular publish without the actual state
 void KalmanFilter::PublishState()
 {
 	PublishState(NAN);
 }
 
+// this publishes or writes to the screen the current information of the system.
 void KalmanFilter::PublishState(double par_actual_state)
 {
 	std::ostringstream outstring;
@@ -71,22 +73,25 @@ void KalmanFilter::PublishState(double par_actual_state)
 	std::cout << outstring.str() << std::endl;
 }
 
-double KalmanFilter::GetState()
+// this gets the current state estimate
+double KalmanFilter::GetStateEstimate()
 {
-	return _state;
+	return _estimate;
 }
 
+// this gets the current Coveriance
 double KalmanFilter::GetCovariance()
 {
 	return _error_in_estimate;
 }
 
-
+// this calls the log function without the actual state
 void KalmanFilter::Log()
 {
 	Log(NAN);
 }
 
+// this creates a comma seperated log file.
 void KalmanFilter::Log(double par_actual_state)
 {
 	std::ofstream stateLog;
@@ -104,12 +109,13 @@ void KalmanFilter::Log(double par_actual_state)
 
 }
 
+//this calles the take measurement function without an update to the Error in measurement
 void KalmanFilter::TakeMeasurement(double par_in_state)
 {
 	TakeMeasurement(par_in_state, NAN);
 }
 
-
+// this takes a measurement and sets the error in measurement if needed.
 void KalmanFilter::TakeMeasurement(double par_in_state, double ErrorInMeasurement)
 {
 	_state = par_in_state;
