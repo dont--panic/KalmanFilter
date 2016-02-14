@@ -7,35 +7,38 @@
 
 //#include <Eigen/Dense>
 #include <iostream>
-
+#include <random>
 #include "KalmanFilter.h"
+#include <cmath>
 
 
 int main(int argc, char** argv)
 {
-	double temp = 0 ;
-	double tempCov = 0;
-
-	double newTemp=0;
-	double newCov=0;
-
-
-	KalmanFilter testKF(temp, tempCov);
+	double ICtemp = 35 ;
+	double ICErrorInEstimate = 2;
+	double errorInMeasurement = 4;
+	double actualTemp = 50;
 
 
 
-	testKF.publishState();
+	KalmanFilter testKF(ICtemp, ICErrorInEstimate, errorInMeasurement);
+
+
+	testKF.publishState(actualTemp);
 
 	for (int i = 0; i < 20; ++i)
 	{
-		std::cout << "timeStep: " << i << std::endl;
+		actualTemp = 50 + 2*exp(-i);
 
-		testKF.takeMeasurement(newTemp+i, newCov+i);
+		double r = ((double) rand() / (RAND_MAX)) - (errorInMeasurement/2);
 
-		//testKF.log();
+		testKF.takeMeasurement(actualTemp+r, errorInMeasurement);
+
+		testKF.publishState(actualTemp);
+
 		testKF.iterate();
 	}
-	testKF.publishState();
+	testKF.publishState(actualTemp);
 
 
 	return 0;
